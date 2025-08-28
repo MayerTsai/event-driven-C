@@ -3,5 +3,5 @@
 
 // initialization of consumer 3
 void initialize_consumer3();
-
+void terminate_consumer3();
 #endif

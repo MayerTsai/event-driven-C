@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"name": "event-driven-C",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"time.h": "c",
+			"time_t.h": "c"
+		}
+	}
+}

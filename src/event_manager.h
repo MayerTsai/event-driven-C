@@ -22,41 +22,42 @@
 #include "events_table.h"
 
 // uncomment/comment for enable/disable debug
-#define EVENT_MANAGER_DEBUG
-
+// #define EVENT_MANAGER_DEBUG
 
 // thread's event queue size
-#define THREAD_EVENT_QUEUE_SIZE       64
-
-
+#define THREAD_EVENT_QUEUE_SIZE 64
 
 // define event structure
-typedef struct {
-    int             id;             // unique identifier value of event
-    uint32_t        data;           // extra data (if any)
-    uint64_t        timestamp;      // timestamp in milliseconds when event is signaled
+typedef struct
+{
+    int id;             // unique identifier value of event
+    uint32_t data;      // extra data (if any)
+    uint64_t timestamp; // timestamp in milliseconds when event is signaled
 } event_object_t;
 
+// event / handler relation structure
+typedef struct
+{
+    event_id_t event_id;
+    void (*handler)(event_object_t);
+} handler_t;
+
 // thread's event queue data
-typedef struct {
-    event_object_t  events[ THREAD_EVENT_QUEUE_SIZE ];
-    int             front;
-    int             rear;
+typedef struct
+{
+    event_object_t events[THREAD_EVENT_QUEUE_SIZE];
+    int front;
+    int rear;
 } event_queue;
 
 // thread's data
-typedef struct {
-    uint32_t            thread_id;
-    pthread_mutex_t     mutex;
-    pthread_cond_t      cond;
-    event_queue         queue;
+typedef struct
+{
+    uint32_t thread_id;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    event_queue queue;
 } thread_data_t;
-
-// event / handler relation structure
-typedef struct {
-    event_id_t          event_id;
-    void                ( *handler )( event_object_t );
-} handler_t;
 
 /*
     thread control data
@@ -73,25 +74,28 @@ typedef struct {
     if you set a value in milliseconds the thread stop waiting events and can perform additional
     operations through timed_ops callback
 */
-typedef struct {
-    uint32_t            module_id;                  // unique id
-    uint32_t            max_groups;                 // max event group interested in
-    events_group_t      *groups;                    // group indexes array
-    int32_t             max_event_handlers;         // total number of handlers
-    handler_t           *handlers;                  // pointer to array of handlers
-    int32_t             timedwait_milliseconds;     // leave 0 to wait events indefinetely
-    void                (*timed_ops)( void );       // callback called every "timedwait_milliseconds" ms
+typedef struct
+{
+    uint32_t module_id;             // unique id
+    uint32_t max_groups;            // max event group interested in
+    events_group_t *groups;         // group indexes array
+    int32_t max_event_handlers;     // total number of handlers
+    handler_t *handlers;            // pointer to array of handlers
+    int32_t timedwait_milliseconds; // leave 0 to wait events indefinitely
+    void (*timed_ops)(void);        // callback called every "timedwait_milliseconds" ms
 } thread_ctrl_t;
-
 
 // initialize event manager module
 void initialize_event_manager();
 
-// send event to dispachter
-void send_event( event_id_t event_id, uint32_t data );
+// send event to dispatcher
+void send_event(event_id_t event_id, uint32_t data);
 
 // base event processing thread (you can define your custom thread but this is the base)
-void* event_processing_thread( void *arg );
+void *event_processing_thread(void *arg);
 
+#ifdef EVENT_MANAGER_DEBUG
+void debug_event_group_listeners_list();
+#endif
 
 #endif

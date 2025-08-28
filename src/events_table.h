@@ -18,7 +18,8 @@
 #define EVENTS_TABLE_H_INCLUDED
 
 // define events
-typedef enum {
+typedef enum
+{
     ev_terminate_thread,
     ev_event1,
     ev_event2,
@@ -26,29 +27,28 @@ typedef enum {
     ev_event4,
     ev_event5,
     ev_event6,
-    // ... add here needed events ...
     ev_max
 } event_id_t;
 
 // define events group
-typedef enum {
+typedef enum
+{
     events_group_threads,
     events_group_1,
     events_group_2,
     events_group_3,
-    // ... add here needed group ...
     events_group_max
 } events_group_t;
 
 // define event info
-typedef struct {
-    event_id_t          id;             // don't use this for event data search, only for clarity in table definition
-    events_group_t      group;          // group event belongs to
-    char                *description;   // for event log, debug, ...
-    // ... other data type relating to specific event ...
+typedef struct
+{
+    event_id_t id;        // don't use this for event data search, only for clarity in table definition
+    events_group_t group; // group event belongs to
+    char *description;    // for event log, debug, ...
 } events_table_item_t;
 
 // export events data
-extern events_table_item_t     events_table[ ev_max ];
+extern events_table_item_t events_table[ev_max];
 
 #endif // EVENTS_TABLE_H_INCLUDED
