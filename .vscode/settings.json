@@ -3,6 +3,7 @@
     "time.h": "c",
     "time_t.h": "c",
     "stdint.h": "c",
-    "stdint-gcc.h": "c"
+    "stdint-gcc.h": "c",
+    "stdlib.h": "c"
   }
 }

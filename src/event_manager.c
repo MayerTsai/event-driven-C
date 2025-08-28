@@ -13,39 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 199309L
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-// #include <linux/time.h>
 #include <sys/time.h>
 #include "event_manager.h"
+
 #include "events_table.h"
-
-// mayer_adding to define clock_id_t type
-#ifndef _LINUX_TIME_H
-
-#define CLOCK_REALTIME 0
-#define CLOCK_MONOTONIC 1
-#define CLOCK_PROCESS_CPUTIME_ID 2
-#define CLOCK_THREAD_CPUTIME_ID 3
-#define CLOCK_MONOTONIC_RAW 4
-#define CLOCK_REALTIME_COARSE 5
-#define CLOCK_MONOTONIC_COARSE 6
-#define CLOCK_BOOTTIME 7
-#define CLOCK_REALTIME_ALARM 8
-#define CLOCK_BOOTTIME_ALARM 9
-
-#define CLOCK_SGI_CYCLE 10
-#define CLOCK_TAI 11
-
-#define MAX_CLOCKS 16
-#define CLOCKS_MASK (CLOCK_REALTIME | CLOCK_MONOTONIC)
-#define CLOCKS_MONO CLOCK_MONOTONIC
-
-#endif
-// mayer added
 
 // list node for listener
 typedef struct event_listener_node
@@ -61,10 +39,8 @@ static event_listener_node_t *event_group_listeners[events_group_max];
 #ifdef EVENT_MANAGER_DEBUG
 void debug_event_group_listeners_list()
 {
-    int i = 0;
-
     // scan all entry for each group
-    for (i = 0; i < events_group_max; i++)
+    for (int i = 0; i < events_group_max; i++)
     {
         printf("[ EVMNG ] Listeners for event group %d -> ", i);
         // if null = nobody subscribed for this group of events
@@ -224,7 +200,7 @@ static void dispatch_event(thread_data_t *thread_data, event_object_t event_obje
     pthread_cond_signal(&thread_data->cond);
 }
 
-// get timesatmp in milliseconds
+// get timestamp in milliseconds
 static int64_t current_timestamp_millis()
 {
     struct timeval te;
@@ -233,7 +209,7 @@ static int64_t current_timestamp_millis()
     return milliseconds;
 }
 
-// send event to dispachter
+// send event to dispatcher
 void send_event(event_id_t event_id, uint32_t data)
 {
     event_listener_node_t *p;
